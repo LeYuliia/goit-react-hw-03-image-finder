@@ -4,11 +4,11 @@ class Searchbar extends Component {
   state = {
     query: "",
   };
-  //Передает строку запроса в query во время изменения текстового поля
+  
   handleChange = (e) => {
     this.setState({ query: e.currentTarget.value });
   };
-  //Передает значение query и ресетит query при сабмите формы
+ 
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.onSubmit(this.state.query);
