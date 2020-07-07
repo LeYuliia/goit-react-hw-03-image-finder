@@ -18,7 +18,6 @@ class App extends Component {
     largeImageURL: "",
   };
 
-  //Запрос на бэкэнд только в случае изменения searchQuery(происходит при сабмите формы поиска):
   componentDidUpdate(prevProps, prevState) {
     const { searchQuery, page } = this.state;
     if (searchQuery !== prevState.searchQuery) {
@@ -48,8 +47,7 @@ class App extends Component {
       .finally(() => this.setState({ isLoading: false }));
   };
 
-  // Сброс значений images и page, и добавление значения поиска в searchQuery при новом запросе
-  //(значение забирается при сабмите из  Searchbar=>state=>query ф-я handleSubmit):
+ 
   onChangeQuery = (query) => {
     this.setState({
       images: [],
@@ -59,8 +57,6 @@ class App extends Component {
     });
   };
 
-  /*======        Открыть (showModal) и закрыть (closeModal) модальное окно.    =========*/
-  //Добавляет значение в  largeImageURL при клике на картинку:
   showModal = (e) => {
     if (e.target.tagName === "IMG") {
       const { images } = this.state;
@@ -94,13 +90,10 @@ class App extends Component {
           />
         )}
 
-        {/* Рендер кнопки  LoadMore после окончания рендера изображений с бекенда:*/}
         {images.length > 0 && !isLoading && (
           <Button onLoadMore={this.fetchImages} />
         )}
 
-        {/* Если в largeImageURL есть свойство, то загружается модальное окно.
-        (Свойство в largeImageURL добавляется при клике на картинку - showModal):*/}
         {largeImageURL.length > 0 && (
           <Modal onClose={this.closeModal}>
             <img src={largeImageURL} alt={images.tags} />
