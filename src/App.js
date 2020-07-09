@@ -19,15 +19,9 @@ class App extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const { searchQuery, page } = this.state;
+    const { searchQuery } = this.state;
     if (searchQuery !== prevState.searchQuery) {
       this.fetchImages();
-    }
-    if (page !== prevState.page && page !== 2) {
-      window.scrollBy({
-        top: document.documentElement.clientHeight - 150,
-        behavior: "smooth",
-      });
     }
   }
 
@@ -43,11 +37,18 @@ class App extends Component {
           page: prevState.page + 1,
         }));
       })
+      .then(() => {
+        if (page > 1) {
+          window.scrollBy({
+            top: document.documentElement.clientHeight - 150,
+            behavior: "smooth",
+          });
+        }
+      })
       .catch((error) => this.setState({ error }))
       .finally(() => this.setState({ isLoading: false }));
   };
 
- 
   onChangeQuery = (query) => {
     this.setState({
       images: [],
@@ -57,16 +58,13 @@ class App extends Component {
     });
   };
 
-  showModal = (e) => {
-    if (e.target.tagName === "IMG") {
-      const { images } = this.state;
-      const currentImgId = Number(e.target.id);
-      const currentImg = images.find((img) => img.id === currentImgId);
+  showModal = (id) => {
+    const { images } = this.state;
+    const currentImg = images.find((img) => img.id === id);
 
-      this.setState({
-        largeImageURL: currentImg.largeImageURL,
-      });
-    }
+    this.setState({
+      largeImageURL: currentImg.largeImageURL,
+    });
   };
 
   closeModal = () => {
@@ -77,7 +75,7 @@ class App extends Component {
     const { images, isLoading, error, largeImageURL } = this.state;
     return (
       <>
-        {error && <p>Somethingth goes wrong!</p>}
+        {error && <p>Somethingth goes wrong!{error}</p>}
         <Searchbar onSubmit={this.onChangeQuery} />
         <ImageGallery images={images} onClick={this.showModal} />
         {isLoading && (
